@@ -1,27 +1,25 @@
 Summary:	A dictionary installer for OpenOffice.org
 Summary (ru_RU.UTF-8):	Программа для установки дополнительных словарей OpenOffice.org
 Name:		ooodi
-Version:	0.65
-Release:	0.1
+Version:	0.68
+Release:	1
 License:	GPL
-Group:		Office
+Group:		X11/Applications
 URL:		http://ooodi.sourceforge.net/
-Source0:	OOodi2-%{version}.tar.gz
-Source1:	ru.po
-Patch0:		configure.patch
-BuildRequires:	XFree86-libs
+Source0:	http://downloads.sourceforge.net/ooodi/OOodi2-%{version}.tar.gz
+# Source0-md5:	47adb912d678a107370c5d1814d6e5fa
+BuildRequires:	atk-devel
 BuildRequires:	curl-devel
+BuildRequires:	expat-devel
 BuildRequires:	fontconfig
-BuildRequires:	freetype2
+BuildRequires:	freetype-devel
 BuildRequires:	glib2-devel
-BuildRequires:	libatk-devel
-BuildRequires:	libexpat
-BuildRequires:	libgtk+2-devel
-BuildRequires:	libpango-devel
-BuildRequires:	libpopt-devel
+BuildRequires:	gtk+2-devel
 BuildRequires:	openssl-devel
+BuildRequires:	pango-devel
 BuildRequires:	pkgconfig
-BuildRequires:	rootfiles
+BuildRequires:	popt-devel
+BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	zlib-devel
 Requires:	unzip
 Obsoletes:	openoffice-dictinstall
@@ -37,9 +35,7 @@ them.
 переносов с сервера <http://dict.progbits.com>.
 
 %prep
-%setup -q -n OOodi2-%version
-cp %{SOURCE1} po
-%patch0
+%setup -q -n OOodi2-%{version}
 
 %build
 %configure
@@ -50,10 +46,16 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
+# one executable is enough
+%{__rm} $RPM_BUILD_ROOT%{_bindir}/OOodi
+
 %find_lang OOodi2
+
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 %files -f OOodi2.lang
 %defattr(644,root,root,755)
 %doc README
-%attr(755,root,root) %{_bindir}/OOodi
+%attr(755,root,root) %{_bindir}/ooodi
 %{_datadir}/OOodi2
